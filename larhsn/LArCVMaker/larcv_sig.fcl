@@ -1,0 +1,46 @@
+#include "services_microboone.fcl"
+#include "LArCVMaker_microboone.fcl"
+
+process_name: larcvmaker
+
+LArCVMaker:
+{
+ module_type:             "larhsn/LArCVMaker/LArCVMaker"
+ WireModuleLabel:         "caldata"
+ McTruthModuleLabel:      "generator"
+ MaxTick:                 6400
+ ADCCut:                  20
+ ImageSizeX:							512
+ ImageSizeY:							512
+ ConstrainProportions:		true
+}
+
+services:
+{
+  TimeTracker:            {}
+  MemoryTracker:          {}
+  RandomNumberGenerator:  {}
+  @table::microboone_services
+}
+
+source:
+{
+  module_type: RootInput
+  maxEvents:  -1
+}
+
+physics:
+{
+ ana:        [ larcv ]
+ end_paths:  [ ana ]
+}
+
+services.DetectorClocksService.InheritClockConfig: false
+services.DetectorClocksService.TriggerOffsetTPC: -400
+services.DetectorPropertiesService.NumberTimeSamples: 6400
+services.DetectorPropertiesService.ReadOutWindowSize: 6400
+
+physics.analyzers.larcv:  @local::LArCVMaker
+physics.analyzers.larcv.EventType: 1
+physics.analyzers.larcv.ADCCut: 20
+
