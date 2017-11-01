@@ -1,11 +1,10 @@
 #include "services_microboone.fcl"
-#include "LArCVMaker_microboone.fcl"
 
 process_name: larcvmaker
 
 LArCVMaker:
 {
- module_type:             "larhsn/LArCVMaker/LArCVMaker"
+ module_type:             "larcvmaker/LArCVMaker/LArCVMaker"
  WireModuleLabel:         "caldata"
  McTruthModuleLabel:      "generator"
  MaxTick:                 6400

@@ -33,7 +33,7 @@
 #include "DataFormat/EventROI.h"
 #include "DataFormat/IOManager.h"
 
-namespace larhsn {
+namespace larcvmaker {
 
 class LArCVMaker : public art::EDAnalyzer {
 public:
@@ -433,5 +433,5 @@ void LArCVMaker::analyze(art::Event const & evt) {
 
 DEFINE_ART_MODULE(LArCVMaker)
 
-} // namespace larhsn
+} // namespace larcvmaker
 
