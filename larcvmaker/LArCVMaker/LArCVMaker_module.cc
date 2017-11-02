@@ -338,8 +338,8 @@ void LArCVMaker::analyze(art::Event const & evt) {
     } //EODecreasingChannel loop
 
     // Diagnostic message
-    // std::cout << "LRChannels: [" << leftEdgeChannel[it_plane] << ", " << rightEdgeChannel[it_plane] << "]" << std::endl;
-    // std::cout << "UDTicks: [" << bottomEdgeTick[it_plane] << ", " << topEdgeTick[it_plane] << "]" << std::endl;
+    std::cout << "LRChannels: [" << leftEdgeChannel[it_plane] << ", " << rightEdgeChannel[it_plane] << "]" << std::endl;
+    std::cout << "UDTicks: [" << bottomEdgeTick[it_plane] << ", " << topEdgeTick[it_plane] << "]" << std::endl;
 
     tickWidth[it_plane] = topEdgeTick[it_plane] - bottomEdgeTick[it_plane];
     channelWidth[it_plane] = rightEdgeChannel[it_plane] - leftEdgeChannel[it_plane];
@@ -392,15 +392,15 @@ void LArCVMaker::analyze(art::Event const & evt) {
   LArCVMaker::FitBoxInDetector(centerTick, centerChannel, realTopEdgeTick, realBottomEdgeTick, realRightEdgeChannel, realLeftEdgeChannel, tickOptWidth, channelOptWidth);
 
   // Diagnostic message
-  // std::cout << std::endl << std::endl;
-  // std::cout << "ROI RESIZED" << std::endl << std::endl;
-  // for (int it_plane = 0; it_plane < 3; ++it_plane) {
-  //   std::cout << std::endl << "PLANE " << it_plane << std::endl;
-  //   std::cout << "Origin: (" << centerChannel[it_plane] << ", " << centerTick[it_plane] << ")" << std::endl;
-  //   std::cout << "LRChannels: [" << realLeftEdgeChannel[it_plane] << ", " << realRightEdgeChannel[it_plane] << "]" << std::endl;
-  //   std::cout << "UDTicks: [" << realBottomEdgeTick[it_plane] << ", " << realTopEdgeTick[it_plane] << "]" << std::endl;
-  //   std::cout << "ROI dimension: " << realRightEdgeChannel[it_plane]-realLeftEdgeChannel[it_plane] << "x" << realTopEdgeTick[it_plane]-realBottomEdgeTick[it_plane] << std::endl;
-  // }
+  std::cout << std::endl << std::endl;
+  std::cout << "ROI RESIZED" << std::endl << std::endl;
+  for (int it_plane = 0; it_plane < 3; ++it_plane) {
+    std::cout << std::endl << "PLANE " << it_plane << std::endl;
+    std::cout << "Origin: (" << centerChannel[it_plane] << ", " << centerTick[it_plane] << ")" << std::endl;
+    std::cout << "LRChannels: [" << realLeftEdgeChannel[it_plane] << ", " << realRightEdgeChannel[it_plane] << "]" << std::endl;
+    std::cout << "UDTicks: [" << realBottomEdgeTick[it_plane] << ", " << realTopEdgeTick[it_plane] << "]" << std::endl;
+    std::cout << "ROI dimension: " << realRightEdgeChannel[it_plane]-realLeftEdgeChannel[it_plane] << "x" << realTopEdgeTick[it_plane]-realBottomEdgeTick[it_plane] << std::endl;
+  }
 
   // Get handle on larcv image
   if (isEmptyEvent==false){
@@ -413,7 +413,10 @@ void LArCVMaker::analyze(art::Event const & evt) {
         for (int it_tick = realBottomEdgeTick[it_plane]; it_tick < realTopEdgeTick[it_plane]; ++it_tick) {
           int xPixel = it_channel - realLeftEdgeChannel[it_plane];
           int yPixel = it_tick - realBottomEdgeTick[it_plane];
-          if (fWireMap.find(it_channel) != fWireMap.end()) image.set_pixel(yPixel,xPixel,fWireMap[it_channel][it_tick]);
+          // Expanded resolution might be larger than actual size of image (e.g. >2400 pixels on x axis). If that's the case, forbid the program to access channels from other planes (e.g. channel 2500 for plane 0) and replace all those values with null pixels.
+
+
+          if (fWireMap.find(it_channel) != fWireMap.end() && it_channel >= fFirstChannel[it_plane] && it_channel <= fLastChannel[it_plane]) image.set_pixel(yPixel,xPixel,fWireMap[it_channel][it_tick]);
           else image.set_pixel(yPixel,xPixel,0);
         }
       }
