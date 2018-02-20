@@ -29,7 +29,7 @@ table_fragment_end
 # Add the dependent product and version
 
 product          version
-uboonecode      v06_26_01_08
+uboonecode      v06_26_01_10
 
 cetbuildtools	v5_06_01	-	only_for_build
 end_product_list
