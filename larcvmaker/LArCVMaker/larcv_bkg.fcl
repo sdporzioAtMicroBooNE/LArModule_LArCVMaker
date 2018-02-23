@@ -19,7 +19,8 @@ services:
   TimeTracker:            {}
   MemoryTracker:          {}
   RandomNumberGenerator:  {}
-  @table::microboone_services
+  @table::microboone_services_reco
+	@table::microboone_simulation_services
 }
 
 source:
